@@ -1,0 +1,12 @@
+{
+  "id": "turn_battle_base",
+  "name": "Turn-based battle engine",
+  "version": "1.0.0",
+  "author": "ct",
+  "description": "Turn-based battle GUI: battle scene, victory/defeat screens, EXP and loot reports",
+  "category": "library, gameplay",
+  "sources": [
+    "src/**/*.cs"
+  ],
+  "depends": [ "core>=1", "interface>=1" ]
+}
