@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "author": "ct",
   "description": "Turn-based battle GUI: battle scene, victory/defeat screens, EXP and loot reports",
-  "category": "library, gameplay",
+  "category": "engine, gameplay",
   "sources": [
     "src/**/*.cs"
   ],
-  "depends": [ "core>=1", "interface>=1" ]
+  "depends": [ "visual_novel_core>=1", "interface>=1" ]
 }

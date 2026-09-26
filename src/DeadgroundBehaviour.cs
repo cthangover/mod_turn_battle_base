@@ -4,6 +4,7 @@ using Cthangover.Core.Mods.Resolvers;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
 using Cthangover.Core.UI.Base.Lists;
+using Cthangover.Core.UI.Theming;
 using Cthangover.Core.Utils;
 using Godot;
 
@@ -34,6 +35,9 @@ namespace Cthangover.TurnBattle
         /// </summary>
         public override void Show()
         {
+            CthangoverTheme.Apply(this);
+            CthangoverTheme.ApplyPrimary(GetNodeOrNull<Button>("Content/CenterPanel/MainMenuButton"));
+
             GameLogger.Log("BATTLE", $"Deadground.Show() ENTER: Visible={Visible}, GodotVisible={base.Visible}", LogLevel.Debug);
 
             var audioService = GetNode<AudioService>("/root/AudioService");

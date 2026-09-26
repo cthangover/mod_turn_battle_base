@@ -10,6 +10,7 @@ using Cthangover.Core.Relationship;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
 using Cthangover.Core.UI.Base.Lists;
+using Cthangover.Core.UI.Theming;
 using Cthangover.Core.Characters;
 using Cthangover.Core.Mods.Resolvers;
 using Cthangover.Core.Utils;
@@ -60,6 +61,9 @@ namespace Cthangover.TurnBattle
         /// </summary>
 		public override void Show()
 		{
+			CthangoverTheme.Apply(this);
+			CthangoverTheme.ApplyPrimary(GetNodeOrNull<Button>("Content/CenterPanel/ContinueButton"));
+
 			lootTitle.Text = TranslationServer.Translate("ui/battle/victory/loot_title");
 
 			GameLogger.Log("BATTLE", $"Winground.Show() ENTER: Visible={Visible}, GodotVisible={base.Visible}, txtInfo={(txtInfo != null ? "found" : "NULL")}", LogLevel.Debug);

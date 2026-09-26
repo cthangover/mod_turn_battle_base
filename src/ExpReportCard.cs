@@ -1,3 +1,4 @@
+using Cthangover.Core.UI.Theming;
 using Godot;
 
 namespace Cthangover.TurnBattle
@@ -28,6 +29,8 @@ namespace Cthangover.TurnBattle
         /// </summary>
         public void Setup(Texture2D characterIcon, string characterName, int exp)
 		{
+			CthangoverTheme.Apply(this);
+
 			ResolveMissingNodes();
 
 			if (icon != null && characterIcon != null)

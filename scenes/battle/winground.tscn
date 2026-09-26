@@ -38,7 +38,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.7)
+color = Color(0, 0, 0, 0.9)
 
 [node name="CharExpContainer" type="HBoxContainer" parent="Content" unique_id=1416765042]
 layout_mode = 1
@@ -105,7 +105,7 @@ alignment = 1
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.3, 1, 0.3, 1)
+theme_override_colors/font_color = Color(0.72549, 0.827451, 0.682353, 1)
 theme_override_font_sizes/font_size = 48
 text = "ui/battle/victory"
 horizontal_alignment = 1

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cthangover.Core.Battle;
 using Cthangover.Core.Settings;
+using Cthangover.Core.UI.Theming;
 using Godot;
 
 namespace Cthangover.TurnBattle
@@ -27,6 +28,8 @@ namespace Cthangover.TurnBattle
 		/// </summary>
 		public BattleSpeedControl()
 		{
+			CthangoverTheme.Apply(this);
+
 			var speeds = new[] { 1, 4, 8 };
 			var hbox = new HBoxContainer { Name = "SpeedButtons" };
 			hbox.Alignment = BoxContainer.AlignmentMode.Begin;
@@ -100,7 +103,7 @@ namespace Cthangover.TurnBattle
 			foreach (var kv in _buttons)
 			{
 				var isActive = kv.Key == _activeSpeed;
-				kv.Value.Modulate = isActive ? new Color(0.4f, 1f, 0.4f, 1f) : Colors.White;
+				kv.Value.Modulate = isActive ? UiTokens.Success : UiTokens.White;
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+using Cthangover.Core.UI.Theming;
 using Godot;
 
 namespace Cthangover.TurnBattle
@@ -37,7 +38,7 @@ namespace Cthangover.TurnBattle
             _label.HorizontalAlignment = HorizontalAlignment.Center;
             _label.VerticalAlignment = VerticalAlignment.Center;
             _label.AddThemeFontSizeOverride("font_size", 28);
-            _label.AddThemeColorOverride("font_outline_color", new Color(0, 0, 0, 1));
+            _label.AddThemeColorOverride("font_outline_color", UiTokens.Alpha(Colors.Black, 1f));
             _label.AddThemeConstantOverride("outline_size", 6);
             AddChild(_label);
         }
@@ -54,8 +55,8 @@ namespace Cthangover.TurnBattle
                 return;
 
             var color = isHeal
-                ? new Color(0.3f, 1f, 0.3f, 1f)
-                : new Color(1f, 0.3f, 0.3f, 1f);
+                ? UiTokens.SuccessText
+                : UiTokens.DangerText;
 
             var hint = new ShowDamageBehaviour();
             parent.AddChild(hint);
@@ -74,7 +75,7 @@ namespace Cthangover.TurnBattle
 
             var hint = new ShowDamageBehaviour();
             parent.AddChild(hint);
-            hint.Init(amount, position, new Color(0.3f, 0.3f, 1f, 1f));
+            hint.Init(amount, position, UiTokens.Info);
         }
 
         /// <summary>
