@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bsrphp6130ptb"]
 
-[ext_resource type="Script" uid="uid://dq85ubii8cfid" path="res://Core/Battle/Actions/BattleActionMachine.cs" id="BattleActionMachineScript"]
-[ext_resource type="Script" uid="uid://c1rwrejr5aoc0" path="res://Core/Battle/BattleSceneContext.cs" id="BattleSceneContextScript"]
+[ext_resource type="Script" path="src/Actions/BattleActionMachine.cs" id="BattleActionMachineScript"]
+[ext_resource type="Script" path="src/BattleSceneContext.cs" id="BattleSceneContextScript"]
 [ext_resource type="Script" path="src/BattleSpeedControl.cs" id="BattleSpeedControlScript"]
 [ext_resource type="PackedScene" uid="uid://bjhtml8ujba7p" path="res://scenes/battle/deadground.tscn" id="DeadgroundScene"]
 [ext_resource type="Script" uid="uid://icsu2hv2c68r" path="res://Core/UI/Lights/UiLightController.cs" id="UiLightControllerScript"]
@@ -47,7 +47,6 @@ grow_vertical = 0
 script = ExtResource("BattleActionMachineScript")
 
 [node name="BattleSpeedControl" type="Control" parent="."]
-layout_mode = 0
 script = ExtResource("BattleSpeedControlScript")
 
 [node name="Deadground" parent="." unique_id=2064995106 instance=ExtResource("DeadgroundScene")]

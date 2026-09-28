@@ -1,4 +1,5 @@
 using Cthangover.Core.Audio;
+using Cthangover.Core.Battle;
 using Cthangover.Core.Mods;
 using Cthangover.Core.Mods.Resolvers;
 using Cthangover.Core.Scenes;
@@ -26,7 +27,7 @@ namespace Cthangover.TurnBattle
         {
             var sceneService = GetNode<GodotSceneService>("/root/GodotSceneService");
             sceneService?.SwitchToMenu();
-            GameData.Instance.Runtime.BattleData = null;
+            BattleRequest.Current = null;
         }
 
         /// <summary>

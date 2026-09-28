@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Cthangover.Core.Audio;
 using Cthangover.Core.Battle;
+using Cthangover.Core.Events;
 using Cthangover.Core.Factories.Impls;
 using Cthangover.Core.Items;
 using Cthangover.Core.Mods;
-using Cthangover.Core.Relationship;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
 using Cthangover.Core.UI.Base.Lists;
@@ -25,8 +25,11 @@ namespace Cthangover.TurnBattle
     /// for missing slots to keep layout stable), rolls loot from defeated
     /// enemies using per-item probability/range, lays out loot in a grid
     /// whose cell size is computed from the container width and
-    /// lootAspectHeight, adds items to inventory, and processes character
-    /// recruitment via RecruitBehaviourRegistry. A "return" button sets
+    /// lootAspectHeight, and adds items to inventory. When enemies were
+    /// defeated it also publishes <see cref="CharactersDefeatedEvent"/> on the
+    /// core event bus — so systems like the recruiting mod can react without
+    /// this screen knowing about them (and without a mod dependency).
+    /// A "return" button sets
     /// the pending scene and reloads BaseScene — the actual destination
     /// scene (town_entry or the quest's ReturnScene) is injected by
     /// the scene manager.
@@ -81,7 +84,7 @@ namespace Cthangover.TurnBattle
 				bg.Texture = tex;
 			}
 
-			data = GameData.Instance.Runtime.BattleData;
+			data = BattleRequest.Current;
 			GameLogger.Log("BATTLE_UI", $"Winground.Show: BattleData={(data != null ? "found" : "NULL")}", LogLevel.Error);
 
 			var expTracking = BuildExpTracking();
@@ -125,7 +128,7 @@ namespace Cthangover.TurnBattle
 				BuildLootDisplay(ctx.GeneratedLoot);
 				AddLootToInventory(ctx.GeneratedLoot);
 
-				ProcessRecruitment(ctx.DefeatedEnemies);
+				PublishDefeatedCharacters(ctx.DefeatedEnemies);
 			}
 
 			WingroundListenerRegistry.Instance.NotifyBeforeShow(ctx);
@@ -338,24 +341,16 @@ namespace Cthangover.TurnBattle
 			}
 		}
 
-		private void ProcessRecruitment(List<Character> enemies)
+		private static void PublishDefeatedCharacters(List<Character> enemies)
 		{
-			var runtime = GameData.Instance.Runtime;
-			var registry = RecruitBehaviourRegistry.Instance;
-
-			foreach (var enemy in enemies)
+			ModEventBus.Publish(new CharactersDefeatedEvent
 			{
-				if (enemy == null || enemy.RecruitmentChance <= 0)
-					continue;
-				if (!registry.CanRecruit(enemy, runtime))
-					continue;
-
-				var roll = random.Next(1, 101);
-				if (roll > enemy.RecruitmentChance)
-					continue;
-
-				runtime.RecruitingData.Add(enemy.ID, enemy.ID);
-			}
+				Source = "battle",
+				CharacterIds = enemies
+					.Where(enemy => enemy != null && !string.IsNullOrEmpty(enemy.ID))
+					.Select(enemy => enemy.ID)
+					.ToArray(),
+			});
 		}
 
 		private void ToReturnScene()
@@ -368,7 +363,7 @@ namespace Cthangover.TurnBattle
 			if (data?.Quest != null && data?.NewTag != null)
 				data.Quest.AddTag(data.NewTag);
 			var returnScene = data?.ReturnScene ?? "town_entry";
-			GameData.Instance.Runtime.BattleData = null;
+			BattleRequest.Current = null;
 
 			var sceneService = GetNode<GodotSceneService>("/root/GodotSceneService");
 			var sceneManager = GetNode<SceneManager>("/root/SceneManager");

@@ -1,0 +1,5 @@
+﻿{ "Items": [
+    ${actions/physics_attack},
+    ${actions/physics_defence},
+    ${actions/physics_stun}
+]}
