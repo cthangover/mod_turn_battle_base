@@ -12,6 +12,7 @@ namespace Cthangover.Core.Cards.StatusEffect
     /// Implements IIdentifiable so it works with PrefabFactory caching.
     /// </summary>
     [System.Serializable]
+    [EntityKind("status_effect")]
     public class StatusEffectInfo : IIdentifiable
     {
         /// <summary>Unique effect identifier used as the factory key.
