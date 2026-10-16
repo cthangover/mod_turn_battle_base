@@ -19,6 +19,7 @@ namespace Cthangover.Core.Battle
 	{
 		private readonly GodotObject _instance;
 
+		/// <summary>Registry key reported by the script's <c>get_winground_listener_id()</c>; deduplicates on rescan.</summary>
 		public string Id { get; }
 
 		/// <summary>
@@ -31,6 +32,7 @@ namespace Cthangover.Core.Battle
 			_instance = instance;
 		}
 
+		/// <summary>Calls the script's <c>on_winground_before_exp(ctx)</c> if implemented; no-op otherwise.</summary>
 		public void OnBeforeExpAward(WingroundContext ctx)
 		{
 			if (!_instance.HasMethod("on_winground_before_exp"))
@@ -41,6 +43,7 @@ namespace Cthangover.Core.Battle
 			BattleGDScriptBridge.SyncWingroundBack(gdCtx, ctx);
 		}
 
+		/// <summary>Calls the script's <c>on_winground_after_loot(ctx)</c> if implemented; no-op otherwise.</summary>
 		public void OnAfterLootGenerated(WingroundContext ctx)
 		{
 			if (!_instance.HasMethod("on_winground_after_loot"))
@@ -51,6 +54,7 @@ namespace Cthangover.Core.Battle
 			BattleGDScriptBridge.SyncWingroundBack(gdCtx, ctx);
 		}
 
+		/// <summary>Calls the script's <c>on_winground_before_show(ctx)</c> if implemented; no-op otherwise.</summary>
 		public void OnBeforeShow(WingroundContext ctx)
 		{
 			if (!_instance.HasMethod("on_winground_before_show"))

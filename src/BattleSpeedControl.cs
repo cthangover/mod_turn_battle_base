@@ -8,7 +8,7 @@ namespace Cthangover.TurnBattle
 {
     /// <summary>
     /// In-battle speed toggle bar (x1/x4/x8). Directly sets
-    /// Engine.TimeScale to globally accelerate the entire game loop —
+    /// Godot.Engine.TimeScale to globally accelerate the entire game loop —
     /// not just animations. Persists the choice to GameData.Settings
     /// so it survives scene reloads. <see cref="ResetToNormal"/> restores 1x
     /// without saving and is the part the core scene consumes through
@@ -71,25 +71,25 @@ namespace Cthangover.TurnBattle
 				speed = 1;
 
 			_activeSpeed = speed;
-			Engine.TimeScale = speed;
+			Godot.Engine.TimeScale = speed;
 			UpdateHighlight();
 		}
 
 		/// <summary>
-		/// Resets <see cref="Engine.TimeScale"/> to 1.0x without
+		/// Resets <see cref="Godot.Engine.TimeScale"/> to 1.0x without
 		/// persisting to settings. Used when battle ends so the lobby
 		/// and menus run at normal speed regardless of the player's
 		/// in-battle preference.
 		/// </summary>
 		public void ResetToNormal()
 		{
-			Engine.TimeScale = 1.0f;
+			Godot.Engine.TimeScale = 1.0f;
 		}
 
 		private void OnSpeedSelected(int speed)
 		{
 			_activeSpeed = speed;
-			Engine.TimeScale = speed;
+			Godot.Engine.TimeScale = speed;
 
 			var settings = GameData.Instance.Settings;
 			settings.BattleSpeed = speed;

@@ -5,12 +5,14 @@ using Cthangover.Core.Factories.Impls;
 using Cthangover.Core.Mods;
 using Cthangover.Core.Settings;
 using Cthangover.Core.UI;
-using Cthangover.Core.UI.Lights;
+using Cthangover.Mods.Time;
 using Cthangover.Core.Characters;
 using Cthangover.Core.Mods.Resolvers;
 using Cthangover.Core.Utils;
 using Godot;
 
+using Cthangover.Mods.Interface.Base;
+using Cthangover.Mods.Interface.Base.Lists;
 namespace Cthangover.Core.Battle
 {
     /// <summary>
@@ -120,6 +122,7 @@ namespace Cthangover.Core.Battle
 			});
 		}
 
+		/// <summary>Claims the scene singleton and registers as the <see cref="ActiveCharacterRegistry"/> provider.</summary>
 		protected override void OnEnterTree()
 		{
 			if (Instance != null && GodotObject.IsInstanceValid(Instance))
@@ -133,6 +136,7 @@ namespace Cthangover.Core.Battle
 			ActiveCharacterRegistry.Provider = this;
 		}
 
+		/// <summary>Releases the singleton slot and the active-character provider so a later scene can claim them.</summary>
 		protected override void OnExitTree()
 		{
 			base.OnExitTree();
@@ -154,6 +158,7 @@ namespace Cthangover.Core.Battle
 		/// </summary>
 		public IBattleCore ActiveBattleCore => activeBattleCore;
 
+		/// <summary>Caches the battle backdrop node, resolves the active <see cref="IBattleCore"/> and starts the battle.</summary>
 		protected override void OnReady()
 		{
 			battleBg = GetNodeOrNull<TextureRect>("BattleBg");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cthangover.Core.Audio;
@@ -9,7 +9,7 @@ using Cthangover.Core.Items;
 using Cthangover.Core.Mods;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
-using Cthangover.Core.UI.Base.Lists;
+using Cthangover.Mods.Interface.Base.Lists;
 using Cthangover.Core.UI.Theming;
 using Cthangover.Core.Characters;
 using Cthangover.Core.Mods.Resolvers;
@@ -71,7 +71,7 @@ namespace Cthangover.TurnBattle
 
 			GameLogger.Log("BATTLE", $"Winground.Show() ENTER: Visible={Visible}, GodotVisible={base.Visible}, txtInfo={(txtInfo != null ? "found" : "NULL")}", LogLevel.Debug);
 
-			var audioService = GetNode<AudioService>("/root/AudioService");
+			var audioService = GetNodeOrNull<Node>("/root/AudioService") as IAudioService;
 			audioService?.PlaySound("battle/winground", SoundType.UI);
 
 			var bg = GetNodeOrNull<TextureRect>("TransitionBg");

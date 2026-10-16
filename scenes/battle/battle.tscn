@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="src/BattleSceneContext.cs" id="BattleSceneContextScript"]
 [ext_resource type="Script" path="src/BattleSpeedControl.cs" id="BattleSpeedControlScript"]
 [ext_resource type="PackedScene" uid="uid://bjhtml8ujba7p" path="res://scenes/battle/deadground.tscn" id="DeadgroundScene"]
-[ext_resource type="Script" uid="uid://icsu2hv2c68r" path="res://Core/UI/Lights/UiLightController.cs" id="UiLightControllerScript"]
+[ext_resource type="Script" uid="uid://icsu2hv2c68r" path="res://mods/time_base/src/Lights/UiLightController.cs" id="UiLightControllerScript"]
 [ext_resource type="PackedScene" uid="uid://b3yq032kqhtn4" path="res://scenes/battle/winground.tscn" id="WingroundScene"]
 
 [node name="BattleScene" type="Control" unique_id=760066045]
