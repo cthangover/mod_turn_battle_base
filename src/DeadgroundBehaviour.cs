@@ -4,7 +4,7 @@ using Cthangover.Core.Mods;
 using Cthangover.Core.Mods.Resolvers;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
-using Cthangover.Core.UI.Base.Lists;
+using Cthangover.Mods.Interface.Base.Lists;
 using Cthangover.Core.UI.Theming;
 using Cthangover.Core.Utils;
 using Godot;
@@ -41,7 +41,7 @@ namespace Cthangover.TurnBattle
 
             GameLogger.Log("BATTLE", $"Deadground.Show() ENTER: Visible={Visible}, GodotVisible={base.Visible}", LogLevel.Debug);
 
-            var audioService = GetNode<AudioService>("/root/AudioService");
+            var audioService = GetNodeOrNull<Node>("/root/AudioService") as IAudioService;
             audioService?.PlaySound("battle/deadground", SoundType.UI);
 
             var bg = GetNodeOrNull<TextureRect>("TransitionBg");

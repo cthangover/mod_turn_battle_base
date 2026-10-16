@@ -21,6 +21,7 @@ namespace Cthangover.Core.Factories.Impls
 #region Singleton
 
         private static readonly Lazy<StatusEffectActionFactory> instance = new(() => new StatusEffectActionFactory());
+        /// <summary>Lazy singleton; construction performs the AppDomain scan.</summary>
         public static StatusEffectActionFactory Instance => instance.Value;
 
         public StatusEffectActionFactory()
@@ -28,12 +29,16 @@ namespace Cthangover.Core.Factories.Impls
             actions = new Dictionary<string, IStatusActions>();
             foreach (var action in Reflections.FindAndCreate<IStatusActions>())
             {
-                actions.Add(action.ID, action);
+                // First-wins: the AppDomain scan covers every loaded assembly and mod
+                // assemblies are never unloaded, so a hot-reload can discover the
+                // same implementation twice — keep the first instance (ItemActionFactory precedent).
+                if (!string.IsNullOrEmpty(action.ID) && !actions.ContainsKey(action.ID)) actions[action.ID] = action;
             }
         }
         
 #endregion
 
+        /// <summary>Resolves the behaviour set registered under the effect's <c>Actions</c> id; unknown ids are logged and return <c>null</c>.</summary>
         public IStatusActions Get(string id)
         {
             if (actions.TryGetValue(id, out var result))

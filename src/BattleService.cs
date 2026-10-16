@@ -4,7 +4,7 @@ using Cthangover.Core.Factories.Impls;
 using Cthangover.Core.Quests;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
-using Cthangover.Core.UI.Lights;
+using Cthangover.Mods.Time;
 using Cthangover.Core.Utils;
 
 namespace Cthangover.Core.Battle

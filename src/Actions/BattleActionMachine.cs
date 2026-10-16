@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cthangover.Core.UI;
 using Godot;
 
+using Cthangover.Mods.Interface.Base;
 namespace Cthangover.Core.Battle.Actions
 {
 
@@ -37,12 +38,14 @@ namespace Cthangover.Core.Battle.Actions
 		/// </summary>
 		public event StopMachineDelegate OnStopMachine;
 		
+		/// <summary>Stops the machine and fires <see cref="OnStopMachine"/> when the node leaves the tree, so subscribers never wait on a dead node.</summary>
 		protected override void OnExitTree()
 		{
 			base.OnExitTree();
 			StopMachine();
 		}
 
+		/// <summary>Drives the queued actions once per frame; fires <see cref="OnStopMachine"/> when the queue drains.</summary>
 		protected override void OnProcess(double delta)
 		{
 			if (Actions.Count == 0 && CurrentAction == null)

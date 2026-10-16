@@ -34,7 +34,7 @@ namespace Cthangover.TurnBattle
             MouseFilter = MouseFilterEnum.Ignore;
 
             _label = new Label();
-            _label.SetAnchorsPreset(LayoutPreset.Center);
+            _label.SetAnchorsAndOffsetsPreset(LayoutPreset.Center);
             _label.HorizontalAlignment = HorizontalAlignment.Center;
             _label.VerticalAlignment = VerticalAlignment.Center;
             _label.AddThemeFontSizeOverride("font_size", 28);
