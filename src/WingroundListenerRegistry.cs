@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Cthangover.Core.Utils;
 
 namespace Cthangover.Core.Battle
 {
 	/// <summary>
 	/// Singleton registry that collects <see cref="IWingroundListener"/>
-	/// implementations (C# via reflection, GDScript via
+	/// implementations (C# from every mod through
+	/// <see cref="WingroundListenerConsumer"/>, GDScript via
 	/// <see cref="RegisterListener"/>) and broadcasts winground
 	/// lifecycle hooks to all of them in registration order.
-	///
-	/// Reflects the same pattern as the recruiting mod's
-	/// <c>RecruitBehaviourRegistry</c>: a
-	/// static Instance, reflection-based <c>RegisterAssembly</c>,
-	/// and manual <c>RegisterListener</c> for GDScript bridges.
 	/// </summary>
 	public class WingroundListenerRegistry
 	{
@@ -23,51 +18,10 @@ namespace Cthangover.Core.Battle
 		private readonly List<IWingroundListener> _listeners = new();
 
 		/// <summary>
-		/// Scans <paramref name="assembly"/> for concrete types that
-		/// implement <see cref="IWingroundListener"/> and instantiates
-		/// them via their parameterless constructor. Called by the battle
-		/// mod's initializer as mods announce themselves.
-		/// </summary>
-		public void RegisterAssembly(Assembly assembly)
-		{
-			foreach (var instance in Reflections.FindAndCreate<IWingroundListener>(assembly))
-			{
-				try
-				{
-					RegisterListener(instance);
-					GameLogger.Log("BATTLE",
-						$"WingroundListenerRegistry: registered C# listener '{instance.Id}' from assembly '{assembly.GetName().Name}'");
-				}
-				catch (Exception ex)
-				{
-					GameLogger.Log("BATTLE",
-						$"WingroundListenerRegistry: failed to create listener '{instance.GetType().FullName}': {ex.Message}",
-						LogLevel.Error);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Scans every assembly loaded in the current <see cref="System.AppDomain"/>
-		/// and registers all <see cref="IWingroundListener"/> implementations.
-		/// Called by the battle mod's initializer so the core does not need to
-		/// reference battle types during its assembly fan-out.
-		/// </summary>
-		public void RegisterAll()
-		{
-			foreach (var instance in Reflections.FindAndCreate<IWingroundListener>())
-				RegisterListener(instance);
-
-			GameLogger.Log("BATTLE",
-				$"WingroundListenerRegistry.RegisterAll: {_listeners.Count} listener(s) registered");
-		}
-
-		/// <summary>
 		/// Registers a listener, replacing any earlier one with the same
-		/// <see cref="IWingroundListener.Id"/>. Deduplication matters because the
-		/// registry is rescanned from the whole AppDomain on mod reload (used by
-		/// the GDScript bridge <see cref="GDWingroundListener"/> and by
-		/// <see cref="RegisterAll"/>). Safe to call from any thread — the
+		/// <see cref="IWingroundListener.Id"/> (used by the GDScript bridge
+		/// <see cref="GDWingroundListener"/> and by
+		/// <see cref="WingroundListenerConsumer"/>). Safe to call from any thread — the
 		/// underlying list is not thread-safe but all registrations happen during
 		/// mod initialisation before battle scenes are loaded.
 		/// </summary>
@@ -80,6 +34,12 @@ namespace Cthangover.Core.Battle
 			_listeners.Add(listener);
 			GameLogger.Log("BATTLE",
 				$"WingroundListenerRegistry: registered listener '{listener.Id}'");
+		}
+
+		/// <summary>Removes exactly <paramref name="listener"/> (its mod is being unloaded).</summary>
+		public void UnregisterListener(IWingroundListener listener)
+		{
+			_listeners.Remove(listener);
 		}
 
 		/// <summary>
