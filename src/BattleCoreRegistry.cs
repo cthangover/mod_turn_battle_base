@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Cthangover.Core.Games;
 using Cthangover.Core.Utils;
 
 namespace Cthangover.Core.Battle
 {
     /// <summary>
-    /// Pluggable battle-core registry. Scans assemblies for non-abstract
-    /// IBattleCore implementations, registers them by ID (each core
-    /// self-identifies), and activates one by ID. GetActive constructs a
+    /// Pluggable battle-core registry. The kernel hands every mod's
+    /// IBattleCore implementations to <see cref="BattleCoreConsumer"/>, which
+    /// registers them by ID (each core self-identifies) and removes them
+    /// again when their mod unloads; one core is activated by ID. GetActive constructs a
     /// fresh instance every call — battle cores are stateless between
     /// battles. Falls back to the first registered core if no active
     /// ID was set, enabling mods to ship drop-in battle engines.
@@ -27,36 +27,29 @@ namespace Cthangover.Core.Battle
         private string _activeCoreId;
 
         /// <summary>
-        /// Scans <paramref name="assembly"/> for non-abstract
-        /// <see cref="IBattleCore"/> implementations, instantiates each
-        /// to read its <see cref="IBattleCore.Id"/>, and registers the
-        /// type by ID. Called at startup so mods can ship drop-in cores.
+        /// Registers a core by its self-reported <see cref="IBattleCore.Id"/>; a
+        /// later core with the same id replaces the earlier one. Fed by
+        /// <see cref="BattleCoreConsumer"/> for every mod assembly.
         /// </summary>
-        public void RegisterAssembly(Assembly assembly)
+        public void Register(IBattleCore core)
         {
-            foreach (var instance in Reflections.FindAndCreate<IBattleCore>(assembly))
-            {
-                _cores[instance.Id] = instance.GetType();
-            }
+            if (core == null)
+                return;
+            _cores[core.Id] = core.GetType();
+            GameLogger.Log("BATTLE", $"BattleCoreRegistry: registered core '{core.Id}'");
         }
 
         /// <summary>
-        /// Scans every assembly loaded in the current <see cref="System.AppDomain"/>
-        /// for <see cref="IBattleCore"/> implementations and registers them by id.
-        /// Called by the battle mod's initializer after assemblies land, which
-        /// replaces the old core-side fan-out in ModAssemblyLoader — the core no
-        /// longer references battle types. Re-registering an id overwrites the
-        /// earlier type, so repeated scans (mod reload) stay idempotent.
+        /// Removes a core whose mod is being unloaded (only when the id still
+        /// maps to that core's type); an active selection of it is dropped.
         /// </summary>
-        public void RegisterAll()
+        public void Unregister(IBattleCore core)
         {
-            foreach (var instance in Reflections.FindAndCreate<IBattleCore>())
-            {
-                _cores[instance.Id] = instance.GetType();
-            }
-
-            GameLogger.Log("BATTLE",
-                $"BattleCoreRegistry.RegisterAll: {_cores.Count} core(s) registered: [{string.Join(", ", CoreIds)}]");
+            if (core == null || !_cores.TryGetValue(core.Id, out var type) || type != core.GetType())
+                return;
+            _cores.Remove(core.Id);
+            if (_activeCoreId == core.Id)
+                _activeCoreId = null;
         }
 
         /// <summary>
