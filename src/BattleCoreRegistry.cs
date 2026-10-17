@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Cthangover.Core.Games;
 using Cthangover.Core.Utils;
 
 namespace Cthangover.Core.Battle
@@ -16,6 +17,9 @@ namespace Cthangover.Core.Battle
     /// </summary>
     public class BattleCoreRegistry
     {
+        /// <summary>Game collection setting naming the battle core of that game.</summary>
+        public const string GameSettingKey = "battle.core";
+
         /// <summary>Singleton registry instance.</summary>
         public static readonly BattleCoreRegistry Instance = new();
 
@@ -68,14 +72,22 @@ namespace Cthangover.Core.Battle
         }
 
         /// <summary>
-        /// Constructs a fresh instance of the active core type. Falls
-        /// back to the first registered core if no active ID was set.
-        /// Throws if no cores are registered at all.
+        /// Constructs a fresh instance of the active core type. Without an
+        /// explicit <c>battle.set_core</c> the active game's
+        /// <c>settings["battle.core"]</c> decides, then the first registered
+        /// core. Throws if no cores are registered at all.
         /// </summary>
         public IBattleCore GetActive()
         {
             if (_activeCoreId != null && _cores.ContainsKey(_activeCoreId))
                 return (IBattleCore)Activator.CreateInstance(_cores[_activeCoreId]);
+
+            var gameCore = ActiveGame.GetSetting(GameSettingKey);
+            if (gameCore != null && _cores.ContainsKey(gameCore))
+            {
+                _activeCoreId = gameCore;
+                return (IBattleCore)Activator.CreateInstance(_cores[gameCore]);
+            }
 
             var firstId = GetFirstCoreId();
             if (firstId != null)
