@@ -134,21 +134,13 @@ namespace Cthangover.Core.Cards.StatusEffect
         /// <summary>Fires end-of-turn hooks on all active effects. Operates
         /// on a defensive copy so that <c>OnTurnEnd</c> callbacks that
         /// add or remove effects do not invalidate the enumerator.
-        /// Decrements remaining turns and removes expired effects via
-        /// <see cref="Remove"/> (which also fires
-        /// <c>OnRemove</c>).</summary>
+        /// Durations count down in <see cref="OnTurnStart"/> only.</summary>
         public void OnTurnEnd()
         {
+            // Only the hook: the countdown belongs to OnTurnStart, a second one
+            // here halved every duration and expired effects without one.
             foreach (var statusEffect in ActiveStatusEffects)
-            {
                 statusEffect.Actions?.OnTurnEnd(owner);
-                statusEffect.RemainingTurns--;
-                if (statusEffect.RemainingTurns <= 0)
-                {
-                    statusEffect.Actions?.OnFinalAction(owner);
-                    Remove(statusEffect.ID);
-                }
-            }
         }
         
         /// <summary>Pipes outgoing damage through every active effect's

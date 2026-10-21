@@ -45,6 +45,7 @@ namespace Cthangover.Core.Cards.StatusEffect
             Name = info.Name;
             Description = info.Description;
             Duration = info.Duration;
+            RemainingTurns = info.Duration;
             EffectType = info.Type;
             Icon = TextureUtils.LoadFromModGroup("characters", info.Icon);
             Actions = StatusEffectActionFactory.Instance.Get(info.Actions);
