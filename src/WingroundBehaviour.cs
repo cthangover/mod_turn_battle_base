@@ -75,17 +75,17 @@ namespace Cthangover.TurnBattle
 			audioService?.PlaySound("battle/winground", SoundType.UI);
 
 			var bg = GetNodeOrNull<TextureRect>("TransitionBg");
-			GameLogger.Log("BATTLE", $"Winground.Show: TransitionBg={(bg != null ? "found" : "NULL")}, texture={(bg?.Texture != null ? "has" : "null")}", LogLevel.Error);
+			GameLogger.Log("BATTLE", $"Winground.Show: TransitionBg={(bg != null ? "found" : "NULL")}, texture={(bg?.Texture != null ? "has" : "null")}", bg != null ? LogLevel.Debug : LogLevel.Error);
 
 			if (bg != null && bg.Texture == null)
 			{
 				var tex = Textures.Resolve("winground");
-				GameLogger.Log("BATTLE", $"Winground.Show: ResolveTexture('winground') = {(tex != null ? "loaded" : "NULL")}", LogLevel.Error);
+				GameLogger.Log("BATTLE", $"Winground.Show: ResolveTexture('winground') = {(tex != null ? "loaded" : "NULL")}", tex != null ? LogLevel.Debug : LogLevel.Error);
 				bg.Texture = tex;
 			}
 
 			data = BattleRequest.Current;
-			GameLogger.Log("BATTLE_UI", $"Winground.Show: BattleData={(data != null ? "found" : "NULL")}", LogLevel.Error);
+			GameLogger.Log("BATTLE_UI", $"Winground.Show: BattleData={(data != null ? "found" : "NULL")}", data != null ? LogLevel.Debug : LogLevel.Error);
 
 			var expTracking = BuildExpTracking();
 			var defeatedEnemies = BuildDefeatedEnemies();
@@ -167,7 +167,7 @@ namespace Cthangover.TurnBattle
 		private void BuildCharExpDisplay(Dictionary<string, int> expTracking)
 		{
 			var container = charExpContainer ?? GetNodeOrNull<Container>("Content/CharExpContainer");
-			GameLogger.Log("BATTLE_UI", $"BuildCharExpDisplay: charExpContainer export={(charExpContainer != null ? "found" : "NULL")}, GetNodeOrNull fallback={(container != null ? "found" : "NULL")}", LogLevel.Error);
+			GameLogger.Log("BATTLE_UI", $"BuildCharExpDisplay: charExpContainer export={(charExpContainer != null ? "found" : "NULL")}, GetNodeOrNull fallback={(container != null ? "found" : "NULL")}", LogLevel.Debug);
 
 			if (container == null)
 			{
@@ -180,7 +180,7 @@ namespace Cthangover.TurnBattle
 
 			var charData = GameData.Instance.Runtime.CharacterData;
 			
-			GameLogger.Log("BATTLE_UI", $"BuildCharExpDisplay: expTracking={(expTracking != null ? $"found ({expTracking.Count} entries)" : "NULL")}, BattleSet count={charData.BattleSet.Count}", LogLevel.Error);
+			GameLogger.Log("BATTLE_UI", $"BuildCharExpDisplay: expTracking={(expTracking != null ? $"found ({expTracking.Count} entries)" : "NULL")}, BattleSet count={charData.BattleSet.Count}", LogLevel.Debug);
 
 			var battleSetList = charData.BattleSet.ToList();
 
@@ -208,7 +208,7 @@ namespace Cthangover.TurnBattle
 					reportCard.Setup(cardTemplate?.Image, name, earnedExp);
 					container.AddChild(reportCard);
 					
-					GameLogger.Log("BATTLE_UI", $"BuildCharExpDisplay: added reportCard for '{characterType}', id='{info.ID}', name='{name}', earnedExp={earnedExp}, cardTemplate={(cardTemplate != null ? "found" : "NULL")}, icon={(cardTemplate?.Image != null ? "has" : "null")}", LogLevel.Error);
+					GameLogger.Log("BATTLE_UI", $"BuildCharExpDisplay: added reportCard for '{characterType}', id='{info.ID}', name='{name}', earnedExp={earnedExp}, cardTemplate={(cardTemplate != null ? "found" : "NULL")}, icon={(cardTemplate?.Image != null ? "has" : "null")}", LogLevel.Debug);
 				}
 				else
 				{
@@ -247,16 +247,7 @@ namespace Cthangover.TurnBattle
 					if (string.IsNullOrWhiteSpace(entry.ItemId))
 						continue;
 
-					var probability = Math.Clamp(entry.Probability, 0, 100);
-					if (probability <= 0)
-						continue;
-					if (probability < 100 && random.Next(1, 101) > probability)
-						continue;
-
-					var count = entry.MinCount == entry.MaxCount
-						? entry.MinCount
-						: random.Next(entry.MinCount, entry.MaxCount + 1);
-
+					var count = entry.Roll(random);
 					if (count > 0)
 						TryAddLootItem(loot, entry.ItemId, count);
 				}
