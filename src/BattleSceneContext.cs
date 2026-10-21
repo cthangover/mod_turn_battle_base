@@ -292,7 +292,7 @@ namespace Cthangover.Core.Battle
 				return;
 			IsDestroyed = true;
 			_battleSpeedControl?.ResetToNormal();
-			ClearBattle();
+			ClearBattle("defeat");
 			deadground?.Show();
 		}
 
@@ -307,7 +307,7 @@ namespace Cthangover.Core.Battle
 				return;
 			IsDestroyed = true;
 			_battleSpeedControl?.ResetToNormal();
-			ClearBattle();
+			ClearBattle("victory");
 			winground?.Show();
 		}
 
@@ -346,7 +346,13 @@ namespace Cthangover.Core.Battle
 			}
 		}
 
-		private void ClearBattle()
+		/// <summary>
+		/// Stops the battle and publishes <see cref="BattleEndedEvent"/>. The
+		/// outcome is passed in by the caller: both screens set
+		/// <see cref="IsDestroyed"/> before clearing, so it cannot be derived
+		/// from that flag (it used to be, and every battle reported "defeat").
+		/// </summary>
+		private void ClearBattle(string result)
 		{
 			BattleActionMachine?.StopMachine();
 			ActiveCharacter = null;
@@ -355,7 +361,7 @@ namespace Cthangover.Core.Battle
 			OnBattleCleared?.Invoke();
 			ModEventBus.Publish(new BattleEndedEvent
 			{
-				Result = IsDestroyed ? "defeat" : "victory",
+				Result = result,
 			});
 		}
 	}
