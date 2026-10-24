@@ -1,0 +1,53 @@
+{
+  "Actions": [
+    {
+      "Id": "battle.init",
+      "Name": "battle/schema/builtin/battle_init",
+      "Description": "battle/schema/builtin/battle_init_desc",
+      "Category": "battle",
+      "Params": [
+        {
+          "Key": "enemies",
+          "Type": "ref_list",
+          "Kind": "character",
+          "Required": true,
+          "Name": "battle/schema/field/enemies"
+        },
+        {
+          "Key": "scene",
+          "Type": "scene",
+          "Name": "battle/schema/field/scene"
+        },
+        {
+          "Key": "quest_id",
+          "Type": "ref",
+          "Kind": "quest",
+          "Name": "battle/schema/field/quest"
+        },
+        {
+          "Key": "new_tag",
+          "Type": "text",
+          "Name": "battle/schema/field/tag"
+        }
+      ]
+    },
+    {
+      "Id": "battle.set_core",
+      "Name": "battle/schema/builtin/set_core",
+      "Description": "battle/schema/builtin/set_core_desc",
+      "Category": "battle",
+      "Params": [
+        {
+          "Key": "core",
+          "Type": "choice",
+          "Options": [
+            "ff_battle",
+            "card_battle"
+          ],
+          "Required": true,
+          "Name": "battle/schema/field/core"
+        }
+      ]
+    }
+  ]
+}
