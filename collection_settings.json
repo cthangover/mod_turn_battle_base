@@ -1,0 +1,14 @@
+{
+  "settings": [
+    {
+      "key": "battle.core",
+      "name": "collection_settings/battle",
+      "description": "collection_settings/battle_hint",
+      "group": "collection_settings/battle_group",
+      "type": "choice",
+      "source": null,
+      "allow_custom": false,
+      "automatic": "collection_settings/battle_auto"
+    }
+  ]
+}
