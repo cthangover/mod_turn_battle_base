@@ -1,0 +1,10 @@
+{
+  "name": "Battles and quests",
+  "version": "1.0.0",
+  "author": "ct",
+  "description": "Glue of turn_battle_base with quests_base, mounted only in a game that has both: a battle started with quest_id notifies that quest, and a won battle adds new_tag to it. Without quests the battle stays a plain battle. Holds no content and no save data.",
+  "category": "engine, gameplay",
+  "sources": [
+    "src/*.cs"
+  ]
+}

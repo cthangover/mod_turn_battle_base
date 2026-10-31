@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cthangover.Core.Factories.Impls;
-using Cthangover.Core.Quests;
 using Cthangover.Core.Scenes;
 using Cthangover.Core.Settings;
 using Cthangover.Mods.Time;
@@ -16,8 +15,8 @@ namespace Cthangover.Core.Battle
     /// <see cref="BackgroundFactory"/> using <see cref="SceneContextNode.LastBackgroundID"/>)
     /// so the battle scene has the correct visual context, and snapshots the
     /// depth/albedo lighting maps from <see cref="UiLightController"/> for visual
-    /// consistency. If a quest id is provided, the quest is bound to the encounter
-    /// and an optional new tag triggers a quest notification. The active battle core
+    /// consistency. A quest id is only carried as text (<see cref="BattleData.QuestId"/>):
+    /// the quest integration (<c>turn_battle_base__quests</c>) binds and tags it. The active battle core
     /// is resolved from <see cref="BattleCoreRegistry"/> — wrapped in try/catch
     /// because the registry may not be initialized when called from non-battle
     /// contexts (e.g. preloading).
@@ -53,20 +52,9 @@ namespace Cthangover.Core.Battle
 
             if (!string.IsNullOrEmpty(questId))
             {
-                try
-                {
-                    var quest = QuestFactory.Instance.Get(questId);
-                    data.Quest = quest;
-                    if (!string.IsNullOrEmpty(newTag))
-                    {
-                        data.NewTag = newTag;
-                        quest.SendNotification();
-                    }
-                }
-                catch (KeyNotFoundException)
-                {
-                    GameLogger.Log("BATTLE", $"BattleService.Init: quest '{questId}' not found, battle will proceed without quest", LogLevel.Error);
-                }
+                data.QuestId = questId;
+                data.NewTag = newTag;
+                GameLogger.Log("BATTLE", $"BattleService.Init: quest '{questId}' handed to the battle (tag '{newTag ?? "-"}'); the quest integration applies it when quests are loaded", LogLevel.Debug);
             }
 
             BattleRequest.Current = data;

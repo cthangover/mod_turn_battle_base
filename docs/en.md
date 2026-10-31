@@ -55,7 +55,7 @@ end
 
 - `enemies` — character ids, comma-separated; the same id twice gives two enemies.
 - `scene` — the scene to return to after a victory.
-- `quest_id`, `new_tag` (optional) — bind the battle to a quest and give it a tag (a journal notification).
+- `quest_id`, `new_tag` (optional) — bind the battle to a quest and give it a tag (a journal notification). They work only in a game with `quests_base`: the glue is the integration `turn_battle_base__quests`; in a game without quests the battle runs and ignores them.
 - The backdrop is the background shown at that moment, so set it before `battle.init`.
 
 On a tile map, use `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead` from the RPG mod instead: it returns to the same map cell and sets the flag on victory.

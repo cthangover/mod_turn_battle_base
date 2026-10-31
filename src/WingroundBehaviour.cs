@@ -351,8 +351,6 @@ namespace Cthangover.TurnBattle
 				GameLogger.Log("BATTLE", "battle data is null!", LogLevel.Error);
 			}
 
-			if (data?.Quest != null && data?.NewTag != null)
-				data.Quest.AddTag(data.NewTag);
 			var returnScene = data?.ReturnScene ?? "town_entry";
 			BattleRequest.Current = null;
 

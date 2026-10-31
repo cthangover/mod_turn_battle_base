@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cthangover.Core.Battle;
 using Cthangover.Core.Factories.Impls;
-using Cthangover.Core.Quests;
 using Cthangover.Core.Characters;
 using Godot;
 
@@ -18,12 +17,14 @@ namespace Cthangover.Core.Settings
     /// </summary>
     public class BattleData
     {
-        /// <summary>The quest that triggered this battle; may be <c>null</c>
-        /// for non-quest skirmishes.</summary>
-        public QuestBase Quest  { get; set; }
-        /// <summary>Auxiliary tag set on new characters acquired via recruitment
-        /// after this battle.</summary>
-        public string    NewTag { get; set; }
+        /// <summary>Id of the quest that triggered this battle, as the scenario
+        /// gave it; <c>null</c> for non-quest skirmishes. The battle only carries
+        /// the id: the quest mod's integration (<c>turn_battle_base__quests</c>)
+        /// resolves it, so this mod does not depend on quests.</summary>
+        public string QuestId { get; set; }
+        /// <summary>Tag the integration adds to <see cref="QuestId"/> after a won
+        /// battle (and notifies about when the battle starts).</summary>
+        public string NewTag  { get; set; }
 
         /// <summary>List of enemy <see cref="Character"/> instances spawned from
         /// the provided IDs or default templates.</summary>

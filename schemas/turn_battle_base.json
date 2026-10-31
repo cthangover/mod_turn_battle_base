@@ -17,17 +17,6 @@
           "Key": "scene",
           "Type": "scene",
           "Name": "battle/schema/field/scene"
-        },
-        {
-          "Key": "quest_id",
-          "Type": "ref",
-          "Kind": "quest",
-          "Name": "battle/schema/field/quest"
-        },
-        {
-          "Key": "new_tag",
-          "Type": "text",
-          "Name": "battle/schema/field/tag"
         }
       ]
     },
@@ -46,6 +35,60 @@
           ],
           "Required": true,
           "Name": "battle/schema/field/core"
+        }
+      ]
+    }
+  ],
+  "Kinds": [
+    {
+      "Kind": "status_effect",
+      "Name": "battle/schema/kind/status_effect",
+      "Description": "battle/schema/kind/status_effect_desc",
+      "Folder": "status_effects",
+      "NewId": "{mod}/new_status",
+      "Order": 22,
+      "Fields": [
+        {
+          "Key": "Name",
+          "Type": "locale",
+          "KeyPattern": "{mod}/status/{id}/name",
+          "Name": "battle/schema/field/name"
+        },
+        {
+          "Key": "Description",
+          "Type": "locale",
+          "KeyPattern": "{mod}/status/{id}/desc",
+          "Name": "battle/schema/field/description"
+        },
+        {
+          "Key": "Type",
+          "Type": "choice",
+          "Options": [ "Buff", "Debuff", "Stun" ],
+          "Default": "Debuff",
+          "Required": true,
+          "Name": "battle/schema/field/status_type",
+          "Description": "battle/schema/field/status_type_desc"
+        },
+        {
+          "Key": "Duration",
+          "Type": "int",
+          "Default": "1",
+          "Name": "battle/schema/field/duration",
+          "Description": "battle/schema/field/duration_desc"
+        },
+        {
+          "Key": "Actions",
+          "Type": "choice",
+          "Options": [ "basic/stun" ],
+          "Default": "basic/stun",
+          "Name": "battle/schema/field/status_actions",
+          "Description": "battle/schema/field/status_actions_desc"
+        },
+        {
+          "Key": "Icon",
+          "Type": "picture",
+          "Group": "characters",
+          "Name": "battle/schema/field/icon"
         }
       ]
     }
