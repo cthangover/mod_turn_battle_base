@@ -55,7 +55,7 @@ end
 
 - `enemies` — ids de personajes separados por comas; el mismo id dos veces son dos enemigos.
 - `scene` — la escena a la que volver tras la victoria.
-- `quest_id`, `new_tag` (opcionales) — vinculan el combate a una misión y le ponen una etiqueta (una notificación en el diario).
+- `quest_id`, `new_tag` (opcionales) vinculan el combate a una misión y añaden el tag al ganar. Requieren `quests_base`, mediante `turn_battle_base__quests`. Sin esta integración el combate ignora esos parámetros.
 - El fondo del combate es el que se muestre en ese momento, así que defínelo antes de `battle.init`.
 
 Sobre un mapa de tiles usa en su lugar el `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead` del mod RPG: el grupo vuelve a la misma casilla y, al ganar, se activa la bandera.
@@ -88,7 +88,7 @@ Una acción de combate que lo aplique puede fijar su propio número de turnos; l
 
 ## Para autores de mods
 
-Un sistema de combate es un mod que registra un `IBattleCore` (y `IBattleAutoPlayable` para las pruebas automáticas). Sus acciones pasan por los ejecutores de la plataforma, así que un mod como Battle Formulas añade nuevos tipos de acciones a todos los sistemas a la vez. El código puede reaccionar al final del combate con `BattleEndedEvent` y a la victoria con un `IWingroundListener`; Recruiting lo aprovecha para ofrecer un puesto en el grupo a los enemigos derrotados.
+Un sistema implementa `IBattleCore` e `IBattleAutoPlayable` para pruebas. Los ejecutores compartidos permiten usar Battle Formulas en ambos. `BattleEndedEvent` comunica el resultado; `IWingroundListener` amplía la victoria. Recruiting escucha en cambio el evento del núcleo `CharactersDefeatedEvent`, publicado por la pantalla de victoria, sin depender de un mod de combate.
 
 ## Si algo sale mal
 

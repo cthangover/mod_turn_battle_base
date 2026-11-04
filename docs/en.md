@@ -55,7 +55,7 @@ end
 
 - `enemies` — character ids, comma-separated; the same id twice gives two enemies.
 - `scene` — the scene to return to after a victory.
-- `quest_id`, `new_tag` (optional) — bind the battle to a quest and give it a tag (a journal notification). They work only in a game with `quests_base`: the glue is the integration `turn_battle_base__quests`; in a game without quests the battle runs and ignores them.
+- `quest_id`, `new_tag` (optional) bind a battle to a quest and add its tag on victory. This requires `quests_base`; the integration `turn_battle_base__quests` supplies the connection. Without it the battle ignores these parameters.
 - The backdrop is the background shown at that moment, so set it before `battle.init`.
 
 On a tile map, use `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead` from the RPG mod instead: it returns to the same map cell and sets the flag on victory.
@@ -88,7 +88,7 @@ A battle action that applies it may set its own number of turns; durations count
 
 ## For mod authors
 
-A battle system is a mod that registers an `IBattleCore` (with `IBattleAutoPlayable` for the automatic tests). Its actions run through the platform's executors, so a mod such as Battle Formulas adds new kinds of actions to every system at once. Code can react to the end of a battle through `BattleEndedEvent` and to the victory through an `IWingroundListener`; Recruiting uses this to offer defeated enemies a place in the party.
+A battle system implements `IBattleCore` and `IBattleAutoPlayable` for automatic tests. Shared executors let Battle Formulas serve both systems. `BattleEndedEvent` reports the result; `IWingroundListener` customizes victory processing. Recruiting instead subscribes to the core event `CharactersDefeatedEvent`, published by the victory screen, and has no dependency on a battle mod.
 
 ## If something goes wrong
 

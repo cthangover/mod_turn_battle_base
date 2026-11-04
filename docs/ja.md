@@ -55,7 +55,7 @@ end
 
 - `enemies`——キャラクター id をカンマ区切りで指定します。同じ id を 2 回書けば敵が 2 体になります。
 - `scene`——勝利後に戻るシーンです。
-- `quest_id`、`new_tag`（省略可）——戦闘をクエストに結び付け、タグ（ジャーナル通知）を付けます。
+- `quest_id`、`new_tag`（省略可）は戦闘をクエストに結び、勝利時にタグを付けます。`quests_base` が必要で、`turn_battle_base__quests` が接続します。なければ戦闘はこれらの引数を無視します。
 - 背景にはその時点で表示されている背景が使われます。`battle.init` の前に設定しておいてください。
 
 タイルマップでは、代わりに RPG Mod の `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead` を使ってください。同じマップセルに戻り、勝利時にフラグが立ちます。
@@ -88,7 +88,7 @@ end
 
 ## Mod作者向け
 
-バトルシステムとは、`IBattleCore` を登録するModです（自動テストのため `IBattleAutoPlayable` も実装します）。そのアクションはプラットフォームのエグゼキューターを通って実行されるため、Battle Formulas のようなModは新しい種類のアクションをすべてのシステムに一度に追加できます。コードは `BattleEndedEvent` で戦闘終了を、`IWingroundListener` で勝利を受け取れます。Recruiting はこれを利用して、倒した敵をパーティに勧誘します。
+戦闘システムは `IBattleCore` と自動テスト用の `IBattleAutoPlayable` を実装します。共通の実行器により Battle Formulas を両方で使えます。`BattleEndedEvent` は結果を通知し、`IWingroundListener` は勝利処理を拡張します。Recruiting は勝利画面が発行するコアの `CharactersDefeatedEvent` を購読し、戦闘 MOD に依存しません。
 
 ## うまくいかないときは
 

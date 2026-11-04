@@ -55,7 +55,7 @@ end
 
 - `enemies` — id nhân vật, phân tách bằng dấu phẩy; cùng một id xuất hiện hai lần nghĩa là hai kẻ địch.
 - `scene` — cảnh sẽ quay về sau khi thắng.
-- `quest_id`, `new_tag` (tùy chọn) — gắn trận chiến với nhiệm vụ và gán cho nó một thẻ (thông báo trên nhật ký).
+- `quest_id`, `new_tag` (tùy chọn) nối trận với nhiệm vụ và thêm thẻ khi thắng. Cần `quests_base`; tích hợp `turn_battle_base__quests` kết nối chúng. Không có tích hợp thì trận bỏ qua hai tham số.
 - Nền trận chiến là nền đang hiển thị tại thời điểm đó, nên hãy đặt nền trước khi gọi `battle.init`.
 
 Trên bản đồ tile, hãy dùng `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead` của mod RPG thay thế: đội sẽ về đúng ô cũ và cờ được đặt khi thắng.
@@ -88,7 +88,7 @@ Hành động chiến đấu gây hiệu ứng này có thể tự đặt số l
 
 ## Dành cho tác giả mod
 
-Hệ thống chiến đấu là một mod đăng ký `IBattleCore` (cùng `IBattleAutoPlayable` cho bộ kiểm thử tự động). Các hành động của nó chạy qua bộ thực thi của nền tảng, nên một mod như Battle Formulas có thể thêm loại hành động mới cho tất cả các hệ thống cùng lúc. Mã nguồn có thể phản ứng khi trận chiến kết thúc qua `BattleEndedEvent` và khi thắng qua `IWingroundListener`; Recruiting dùng đúng cơ chế này để mời kẻ địch bị hạ gia nhập đội.
+Hệ thống triển khai `IBattleCore` và `IBattleAutoPlayable` cho kiểm thử. Bộ thực thi chung cho phép Battle Formulas dùng trong cả hai. `BattleEndedEvent` báo kết quả; `IWingroundListener` mở rộng xử lý thắng. Recruiting nghe sự kiện lõi `CharactersDefeatedEvent` do màn hình thắng phát, không phụ thuộc mod chiến đấu.
 
 ## Khi có sự cố
 

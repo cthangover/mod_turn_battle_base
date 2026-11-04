@@ -55,7 +55,7 @@ end
 
 - `enemies`——角色 id，逗号分隔；同一个 id 出现两次就是两个敌人。
 - `scene`——胜利后返回的场景。
-- `quest_id`、`new_tag`（可选）——把战斗绑定到任务，并给它一个标签（日志通知）。
+- `quest_id`、`new_tag`（可选）关联任务并在胜利时添加标签。需要 `quests_base`，由 `turn_battle_base__quests` 集成连接。没有该集成时战斗忽略这些参数。
 - 战斗背景就是当时显示的背景，所以要在 `battle.init` 之前设置好。
 
 在图块地图上，请改用 RPG 模组的 `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead`：队伍会回到同一格，胜利时还会设置标记。
@@ -88,7 +88,7 @@ end
 
 ## 给模组作者
 
-战斗系统是一个注册了 `IBattleCore` 的模组（自动测试还需要 `IBattleAutoPlayable`）。它的动作经由平台的执行器运行，因此像 Battle Formulas 这样的模组能一次为所有系统添加新类型的动作。代码可以通过 `BattleEndedEvent` 响应战斗结束，通过 `IWingroundListener` 响应胜利；Recruiting 就是这样邀请被击败的敌人加入队伍的。
+战斗系统实现 `IBattleCore`，自动测试还实现 `IBattleAutoPlayable`。共享执行器使 Battle Formulas 支持两种系统。`BattleEndedEvent` 报告结果，`IWingroundListener` 扩展胜利处理。Recruiting 则订阅胜利画面发布的核心事件 `CharactersDefeatedEvent`，不依赖战斗模组。
 
 ## 出问题怎么办
 

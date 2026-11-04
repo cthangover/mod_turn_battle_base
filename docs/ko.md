@@ -55,7 +55,7 @@ end
 
 - `enemies` — 캐릭터 id를 쉼표로 나열합니다. 같은 id를 두 번 쓰면 적이 둘 나옵니다.
 - `scene` — 승리 후 돌아갈 장면입니다.
-- `quest_id`, `new_tag`(선택) — 전투를 퀘스트에 묶고 태그(저널 알림)를 붙입니다.
+- `quest_id`, `new_tag`(선택)는 전투를 퀘스트와 연결하고 승리 시 태그를 추가합니다. `quests_base`와 이를 연결하는 `turn_battle_base__quests` 통합이 필요합니다. 없으면 전투에서 이 매개변수를 무시합니다.
 - 전투 배경은 그 시점에 표시된 배경입니다. `battle.init` 전에 배경을 정해 두세요.
 
 타일 맵에서는 대신 RPG 모드의 `action rpg.battle enemies=rpg_wolf win_flag=rpg_wolf_dead`를 사용하세요. 같은 맵 칸으로 돌아오고, 승리 시 플래그가 설정됩니다.
@@ -88,7 +88,7 @@ end
 
 ## 모드 작성자를 위해
 
-전투 시스템은 `IBattleCore`를 등록하는 모드입니다(자동 테스트를 위한 `IBattleAutoPlayable`도). 이 모드의 액션은 플랫폼의 실행기를 거치므로, Battle Formulas 같은 모드가 새 종류의 액션을 모든 시스템에 한꺼번에 추가할 수 있습니다. 코드는 `BattleEndedEvent`로 전투 종료를, `IWingroundListener`로 승리를 받아볼 수 있습니다. Recruiting이 이를 이용해 쓰러뜨린 적에게 파티 자리를 제안합니다.
+전투 시스템은 `IBattleCore`와 자동 테스트용 `IBattleAutoPlayable`를 구현합니다. 공통 실행기로 Battle Formulas를 양쪽에서 씁니다. `BattleEndedEvent`는 결과를 알리고 `IWingroundListener`는 승리 처리를 확장합니다. Recruiting은 승리 화면이 발행하는 코어 이벤트 `CharactersDefeatedEvent`를 구독하며 전투 모드에 의존하지 않습니다.
 
 ## 문제가 생겼을 때
 
