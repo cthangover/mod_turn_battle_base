@@ -1,7 +1,7 @@
 {
   "id": "turn_battle_base",
   "name": "Turn Battle Base",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "author": "ct",
   "description": "The platform under every turn-based battle: starting from a scenario, the battle scene, victory and defeat, experience and loot — how the player fights is a separate battle system.",
   "category": "engine, gameplay",
@@ -9,7 +9,7 @@
     "src/**/*.cs"
   ],
   "test_sources": ["tests/*.cs"],
-  "depends": [ "characters_base>=1", "ui_base>=1", "items_base>=1", "time_base>=1" ],
+  "depends": [ "characters_base>=0.1.0", "ui_base>=0.1.0", "items_base>=0.1.0", "time_base>=0.1.0" ],
   "integrations": [
     { "id": "quests", "with": [ "quests_base" ] }
   ]
