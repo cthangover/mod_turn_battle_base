@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "author": "ct",
   "description": "The platform under every turn-based battle: starting from a scenario, the battle scene, victory and defeat, experience and loot — how the player fights is a separate battle system.",
-  "category": "engine, gameplay",
+  "categories": ["engine", "gameplay"],
   "sources": [
     "src/**/*.cs"
   ],
