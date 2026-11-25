@@ -36,6 +36,8 @@ namespace Cthangover.TurnBattle
     /// </summary>
 	public partial class WingroundBehaviour : TransitionWidget
 	{
+		private BattleData settledBattle;
+		private const string DefaultReturnScene = "town_entry";
 		private static readonly ModScenePrefab ExpReportCardPrefab = new("scenes/battle/exp_report_card.tscn");
 		private static readonly ModScenePrefab LootReportItemPrefab = new("scenes/battle/loot_report_item.tscn");
 
@@ -86,6 +88,12 @@ namespace Cthangover.TurnBattle
 
 			data = BattleRequest.Current;
 			GameLogger.Log("BATTLE_UI", $"Winground.Show: BattleData={(data != null ? "found" : "NULL")}", data != null ? LogLevel.Debug : LogLevel.Error);
+			if (data == null || ReferenceEquals(data, settledBattle))
+			{
+				base.Show();
+				return;
+			}
+			settledBattle = data;
 
 			var expTracking = BuildExpTracking();
 			var defeatedEnemies = BuildDefeatedEnemies();
@@ -126,7 +134,7 @@ namespace Cthangover.TurnBattle
 				WingroundListenerRegistry.Instance.NotifyAfterLootGenerated(ctx);
 
 				BuildLootDisplay(ctx.GeneratedLoot);
-				AddLootToInventory(ctx.GeneratedLoot);
+				GrantLoot(ctx.GeneratedLoot, data.ReturnScene ?? DefaultReturnScene);
 
 				PublishDefeatedCharacters(ctx.DefeatedEnemies);
 			}
@@ -322,13 +330,13 @@ namespace Cthangover.TurnBattle
 			}
 		}
 
-		private static void AddLootToInventory(List<ItemContainer> loot)
+		private static void GrantLoot(List<ItemContainer> loot, string returnScene)
 		{
 			var inventory = GameData.Instance.Runtime.Inventory;
 			foreach (var itemContainer in loot)
 			{
 				if (itemContainer.Item != null)
-					inventory.Add(itemContainer.Item, itemContainer.Count);
+					InventoryRewards.Grant(inventory, itemContainer.Item, itemContainer.Count, returnScene);
 			}
 		}
 
@@ -351,7 +359,7 @@ namespace Cthangover.TurnBattle
 				GameLogger.Log("BATTLE", "battle data is null!", LogLevel.Error);
 			}
 
-			var returnScene = data?.ReturnScene ?? "town_entry";
+			var returnScene = data?.ReturnScene ?? DefaultReturnScene;
 			BattleRequest.Current = null;
 
 			var sceneService = GetNode<GodotSceneService>("/root/GodotSceneService");
